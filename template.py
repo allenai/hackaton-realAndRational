@@ -72,14 +72,19 @@ class Template3(Template):
   def toTuple(self):
     return self.concepts0, self.concepts1, self.concepts2
 
+def generateTuples(sentence):
+  concepts = extractConcepts(sentence)
+  tuples = (Template1(concepts).toTuple(),
+            Template2(concepts).toTuple(), Template3(concepts).toTuple())
+  return tuples
+
 def main():
   sent = 'Distance is speed times time'
   print sent
-  concepts = extractConcepts(sent)
-  t1 = Template1(concepts)
-  print t1.toTuple()
+  tuples = generateTuples(sent)
+  for t in tuples: print t
 
-  features = extractFeatures(sent, t1)
+  features = extractFeatures(sent, Template1(extractConcepts(sent)))
   for f in features: print f.toString()
 
   return 0
