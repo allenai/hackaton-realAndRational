@@ -101,6 +101,16 @@ def main():
            #   ]
            # ]
   solutions = solver.solver(tuples)
+
+  solMap = {}
+  for s in solutions.keys():
+    varSet = set({s[0][0]}).union(s[0][1])
+    k = (varSet,s[1][0].word,s[1][1].word)
+    if not solMap.has_key(k):
+      solMap[k] = solutions[s]
+    elif solutions[s]>solMap[k]:
+      solMap[k] = solutions[s]
+  
   pprint.pprint(solutions)
 
   f1TimesCount = 0
@@ -109,7 +119,8 @@ def main():
   f2DividedCount = 0
   f3TimesCount = 0
   f3DividedCount = 0
-  for (k,c) in solutions.iteritems():
+
+  for (c,k) in solutions:
     if k[1][1].word=="times" and k[1][0].templateNumber==0: f1TimesCount += c
     if k[1][1].word=="divided" and k[1][0].templateNumber==0: f1DividedCount += c
     if k[1][1].word=="times" and k[1][0].templateNumber==1: f2TimesCount += c
@@ -123,6 +134,10 @@ def main():
   print f2DividedCount
   print f3TimesCount
   print f3DividedCount
+
+  for s in solMap.keys():
+    print 
+    
 
   # features = extractFeatures(sentences[0],
   # Template0(extractConcepts(sentences[0])))
