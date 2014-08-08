@@ -24,23 +24,52 @@ def featureConsistentTemplates(world):
     helper(features, out, 3)
     return out
 
-def featureConsistentTemplates(world):
+def featurePercentagesTemplates(world):
     features = dict()
-    consistDict = dict()
+    templateCounts = dict()
     for a,feat in world:
         words = ','.join([f.word for f in feat])
-        temp = feat[0].templateNumber
-        if words in consistDict and consistDict[words] != temp:
-            features[words] = -1
-        elif words not in consistDict:
-            consistDict[words] = temp
-            features[words] = temp
-    out = {}
+        template = feat[0].templateNumber
+        if words in templateCounts:
+            templateCounts[words][template] += 1
+        else:
+            templateCounts[words] = [0,0,0]
+            templateCounts[words][template] += 1
 
-    helper(features, out, 1)
-    helper(features, out, 2)
-    helper(features, out, 3)
-    return out
+    for words,counts in templateCounts.iteritems():
+        total = sum(counts)
+        for i in range(len(counts)):
+            features["perc_%s,%s" % (words, str(i))] = float(counts[i]) / total
+
+    return features
+
+
+def featureMajorityTemplates(world):
+    features = dict()
+    templateCounts = dict()
+    for a,feat in world:
+        words = ','.join([f.word for f in feat])
+        template = feat[0].templateNumber
+        if words in templateCounts:
+            templateCounts[words][template] += 1
+        else:
+            templateCounts[words] = [0,0,0]
+            templateCounts[words][template] += 1
+
+    for words,counts in templateCounts.iteritems():
+        max = 0
+        maxI = 0
+        for i in range(len(counts)):
+            if counts[i] > max:
+                max = counts[i]
+                maxI = i
+            elif counts[i] == max and max > 0:
+                return {}
+
+        features["maj_%s,%s" % (words, str(maxI))] = 1
+
+    return features
+
 
 def helper(features, out, r):
     comb = itertools.combinations(features.keys(), r)

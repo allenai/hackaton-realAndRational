@@ -111,7 +111,7 @@ def main():
   #     ('p', frozenset(['s', 'f']))
   #   ]
   # ]
-  (solutions, globalStats) = solver.solver(tuples, [solver.featureConsistentTemplates, solver.validModels])
+  (solutions, globalStats) = solver.solver(tuples, [solver.featureConsistentTemplates, solver.validModels, solver.featurePercentagesTemplates, solver.featureMajorityTemplates])
 
   # solMap = {}
   # for s in solutions.keys():
