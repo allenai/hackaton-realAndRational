@@ -10,10 +10,10 @@ def solver(sent_tuples):
     #outs = [enum(x) for x in sent_tuples]
     count = 1
     for combination in itertools.product(*sent_tuples):
-        print combination
-        if count % 1000 == 0:
-            print count
-        count = count+1
+        # print combination
+        # if count % 1000 == 0:
+        #     print count
+        # count = count+1
         G = nx.DiGraph()
         for key,val in combination:
             for v in val:
@@ -34,6 +34,6 @@ def enum(sent_tuple):
         out.append((sent_tuple[i], set(sent_tuple[0:i]).union(set(sent_tuple[i+1:]))))
     return out
 
-print solver([[("a",frozenset({"b","c"})),("c",frozenset({"b","a"}))],[("c",frozenset({"d","a"}))]])
+# print solver([[("a",frozenset({"b","c"})),("c",frozenset({"b","a"}))],[("c",frozenset({"d","a"}))]])
 
 

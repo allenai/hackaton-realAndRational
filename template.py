@@ -1,9 +1,11 @@
 import string
 import sys
+import solver
+import pprint
 
 CONCEPTS = {'distance': 'd', 'speed': 's', 'time': 't',
             'power': 'p', 'energy': 'e', 'force': 'f',
-            'acceleration': 'a'}
+            'acceleration': 'a', 'mass': 'm'}
 
 RELATIONS = ['is', 'times', 'divided by']
 
@@ -45,7 +47,7 @@ class Template0(Template):
   def __init__(self, concepts):
     Template.__init__(self, concepts)
     self.head = self.concepts[0]
-    self.body = set(self.concepts[1:3])
+    self.body = frozenset(self.concepts[1:3])
     self.number = 0
 
   def toTuple(self):
@@ -55,7 +57,7 @@ class Template1(Template):
   def __init__(self, concepts):
     Template.__init__(self, concepts)
     self.head = self.concepts[1]
-    self.body = {self.concepts[0], self.concepts[2]}
+    self.body = frozenset({self.concepts[0], self.concepts[2]})
     self.number = 1
 
   def toTuple(self):
@@ -65,7 +67,7 @@ class Template2(Template):
   def __init__(self, concepts):
     Template.__init__(self, concepts)
     self.head = self.concepts[2]
-    self.body = set(self.concepts[0:2])
+    self.body = frozenset(self.concepts[0:2])
     self.number = 2
 
   def toTuple(self):
@@ -73,9 +75,9 @@ class Template2(Template):
 
 def generateTuplesForOneSentence(sentence):
   concepts = extractConcepts(sentence)
-  tuples = (
-    Template0(concepts).toTuple(), Template1(concepts).toTuple(), Template2(concepts).toTuple())
-  return tuples
+  lst = [
+    Template0(concepts).toTuple(), Template1(concepts).toTuple(), Template2(concepts).toTuple()]
+  return lst
 
 def generateTuples(sentences):
   tuples = map(generateTuplesForOneSentence, sentences)
@@ -86,10 +88,11 @@ def main():
                'speed is acceleration times time', 'power is speed times force',
                'energy is force times distance', 'energy is power times time']
   tuples = generateTuples(sentences)
+  pprint.pprint(solver.solver(tuples))
 
-  features = extractFeatures(sentences[0],
-                             Template0(extractConcepts(sentences[0])))
-  for f in features: print f.toString()
+  # features = extractFeatures(sentences[0],
+  # Template0(extractConcepts(sentences[0])))
+  # for f in features: print f.toString()
 
 if __name__ == "__main__":
   sys.exit(main())
