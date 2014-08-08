@@ -7,7 +7,7 @@ CONCEPTS = {'distance': 'd', 'speed': 's', 'time': 't',
             'power': 'p', 'energy': 'e', 'force': 'f',
             'acceleration': 'a', 'mass': 'm'}
 
-RELATIONS = ['is', 'times', 'divided by']
+RELATIONS = ['is', 'times', 'divided']
 
 def extractConcepts(sentence):
   words = string.split(sentence)
@@ -34,7 +34,7 @@ class Feature:
     self.slot = slot
     self.templateNumber = templateNumber
 
-  def toString(self):
+  def __repr__(self):
     return '"{}" in operator slot {} for template {}'.format(self.word,
                                                              self.slot,
                                                              self.templateNumber)
@@ -76,7 +76,9 @@ class Template2(Template):
 def generateTuplesForOneSentence(sentence):
   concepts = extractConcepts(sentence)
   lst = [
-    Template0(concepts).toTuple(), Template1(concepts).toTuple(), Template2(concepts).toTuple()]
+    (Template0(concepts).toTuple(), extractFeatures(sentence, Template0(concepts))),
+    (Template1(concepts).toTuple(), extractFeatures(sentence, Template1(concepts))),
+    (Template2(concepts).toTuple(), extractFeatures(sentence, Template2(concepts)))]
   return lst
 
 def generateTuples(sentences):
@@ -86,9 +88,41 @@ def generateTuples(sentences):
 def main():
   sentences = ['distance is speed times time', 'force is mass times acceleration',
                'speed is acceleration times time', 'power is speed times force',
-               'energy is force times distance', 'energy is power times time']
+               'energy is force times distance', 'energy is power times time',
+               'speed is distance divided by time', 'mass is force divided by acceleration',
+               'acceleration is speed divided by time']
   tuples = generateTuples(sentences)
-  pprint.pprint(solver.solver(tuples))
+           # [
+           #   [
+           #     ('f', frozenset(['m', 'a']))
+           #   ],
+           #   [
+           #     ('p', frozenset(['s', 'f']))
+           #   ]
+           # ]
+  solutions = solver.solver(tuples)
+  pprint.pprint(solutions)
+
+  f1TimesCount = 0
+  f1DividedCount = 0
+  f2TimesCount = 0
+  f2DividedCount = 0
+  f3TimesCount = 0
+  f3DividedCount = 0
+  for (k,c) in solutions.iteritems():
+    if k[1][1].word=="times" and k[1][0].templateNumber==0: f1TimesCount += c
+    if k[1][1].word=="divided" and k[1][0].templateNumber==0: f1DividedCount += c
+    if k[1][1].word=="times" and k[1][0].templateNumber==1: f2TimesCount += c
+    if k[1][1].word=="divided" and k[1][0].templateNumber==1: f2DividedCount += c
+    if k[1][1].word=="times" and k[1][0].templateNumber==2: f3TimesCount += c
+    if k[1][1].word=="divided" and k[1][0].templateNumber==2: f3DividedCount += c
+
+  print f1TimesCount
+  print f1DividedCount
+  print f2TimesCount
+  print f2DividedCount
+  print f3TimesCount
+  print f3DividedCount
 
   # features = extractFeatures(sentences[0],
   # Template0(extractConcepts(sentences[0])))

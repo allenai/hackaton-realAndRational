@@ -15,17 +15,19 @@ def solver(sent_tuples):
         #     print count
         # count = count+1
         G = nx.DiGraph()
-        for key,val in combination:
+        for c in combination:
+            key = c[0][0]
+            val = c[0][1]
             for v in val:
                 G.add_edge(key,v)
+            if c not in stats:
+                stats[c] = 0
         try:
             k = nx.simple_cycles(G).next()
         except StopIteration:
             for c in combination:
-                if c in stats:
-                    stats[c] = stats[c] + 1
-                else:
-                    stats[c] = 1
+                stats[c] = stats[c] + 1
+
     return stats
 
 def enum(sent_tuple):
