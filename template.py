@@ -5,7 +5,7 @@ import pprint
 
 CONCEPTS = {'distance': 'd', 'speed': 's', 'time': 't',
             'power': 'p', 'energy': 'e', 'force': 'f',
-            'acceleration': 'a', 'mass': 'm'}
+            'acceleration': 'a', 'mass': 'm', 'speed2': 's2'}
 
 RELATIONS = ['is', 'times', 'divided']
 
@@ -90,8 +90,18 @@ def main():
                'force is mass times acceleration',
                'speed is acceleration times time', 'power is speed times force',
                'energy is force times distance', 'energy is power times time',
-               'speed is distance divided by time'] # 'mass is force divided by acceleration',
-               #'acceleration is speed divided by time']
+               'speed is distance divided by time',
+               'acceleration is speed divided by time',
+               'speed times force is power',
+               'speed is power divided by force']
+  # sentences = [
+  #   'distance is speed times time',
+  #   'speed times time is distance',
+  #   'speed is distance divided time',
+  #   'distance is speed2 times time',
+  #              'speed2 times time is distance',
+  #              'speed2 is distance divided time',
+  #              ]
   tuples = generateTuples(sentences)
   # [
   # [

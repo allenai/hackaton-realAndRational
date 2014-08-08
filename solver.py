@@ -14,20 +14,36 @@ def featureConsistentTemplates(world):
         temp = feat[0].templateNumber
         if words in consistDict and consistDict[words] != temp:
             features[words] = -1
-        else:
+        elif words not in consistDict:
             consistDict[words] = temp
             features[words] = temp
     out = {}
 
-    for (wordPair1, wordPair2) in itertools.product(features.keys(),features.keys()):
-        if wordPair1 != wordPair2 and features[wordPair1] >= 0 and features[wordPair2] >= 0:
-          out["%s,%d,%s,%d" % (wordPair1,features[wordPair1],wordPair2,features[wordPair2])] = 1
-
-
-    for key, val in features.iteritems():
-      if val >= 0:
-        out["%s,%d" %(key,val)] = 1
+    helper(features, out, 1)
+    helper(features, out, 2)
+    helper(features, out, 3)
     return out
+
+def helper(features, out, r):
+    comb = itertools.combinations(features.keys(), r)
+    for wordPairs in comb:
+        consistent = True
+        for wordPair in wordPairs:
+            if features[wordPair] < 0:
+                consistent = False
+                break
+        if consistent:
+            out_list = []
+            for wordPair in wordPairs:
+                out_list.append(wordPair)
+                out_list.append(str(features[wordPair]))
+            key = ','.join(out_list)
+            out[key] = 1
+
+
+
+
+
 
 # (a,b,c) -> (a:{{b,c}}), (b:{{a,c}}), (c:{{a,b}})
 # (b,c,d) -> (b:{{c,d}}), (c:{{b,d}}), (d:{{b,c}})
