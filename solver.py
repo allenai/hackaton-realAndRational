@@ -18,11 +18,16 @@ def featureConsistentTemplates(world):
             consistDict[words] = temp
             features[words] = temp
     out = {}
+
+    for (wordPair1, wordPair2) in itertools.product(features.keys(),features.keys()):
+        if wordPair1 != wordPair2 and features[wordPair1] >= 0 and features[wordPair2] >= 0:
+          out["%s,%d,%s,%d" % (wordPair1,features[wordPair1],wordPair2,features[wordPair2])] = 1
+
+
     for key, val in features.iteritems():
       if val >= 0:
         out["%s,%d" %(key,val)] = 1
     return out
-
 
 # (a,b,c) -> (a:{{b,c}}), (b:{{a,c}}), (c:{{a,b}})
 # (b,c,d) -> (b:{{c,d}}), (c:{{b,d}}), (d:{{b,c}})

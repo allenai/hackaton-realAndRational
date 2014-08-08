@@ -86,11 +86,12 @@ def generateTuples(sentences):
   return tuples
 
 def main():
-  sentences = ['distance is speed times time', 'force is mass times acceleration',
+  sentences = ['distance is speed times time', 'speed times time is distance',
+               'force is mass times acceleration',
                'speed is acceleration times time', 'power is speed times force',
                'energy is force times distance', 'energy is power times time',
-               'speed is distance divided by time', 'mass is force divided by acceleration',
-               'acceleration is speed divided by time']
+               'speed is distance divided by time'] # 'mass is force divided by acceleration',
+               #'acceleration is speed divided by time']
   tuples = generateTuples(sentences)
   # [
   # [
