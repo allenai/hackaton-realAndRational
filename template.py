@@ -92,15 +92,15 @@ def main():
                'speed is distance divided by time', 'mass is force divided by acceleration',
                'acceleration is speed divided by time']
   tuples = generateTuples(sentences)
-           # [
-           #   [
-           #     ('f', frozenset(['m', 'a']))
-           #   ],
-           #   [
-           #     ('p', frozenset(['s', 'f']))
-           #   ]
-           # ]
-  (solutions, globalStats) = solver.solver(tuples, [solver.featureConsistentTemplates])
+  # [
+  # [
+  #     ('f', frozenset(['m', 'a']))
+  #   ],
+  #   [
+  #     ('p', frozenset(['s', 'f']))
+  #   ]
+  # ]
+  (solutions, globalStats) = solver.solver(tuples, [solver.featureConsistentTemplates, solver.validModels])
 
   # solMap = {}
   # for s in solutions.keys():
@@ -110,7 +110,7 @@ def main():
   #     solMap[k] = solutions[s]
   #   elif solutions[s]>solMap[k]:
   #     solMap[k] = solutions[s]
-  
+
   pprint.pprint(solutions)
   pprint.pprint(globalStats)
 
@@ -121,13 +121,13 @@ def main():
   f3TimesCount = 0
   f3DividedCount = 0
 
-  for (c,k) in solutions:
-    if k[1][1].word=="times" and k[1][0].templateNumber==0: f1TimesCount += c
-    if k[1][1].word=="divided" and k[1][0].templateNumber==0: f1DividedCount += c
-    if k[1][1].word=="times" and k[1][0].templateNumber==1: f2TimesCount += c
-    if k[1][1].word=="divided" and k[1][0].templateNumber==1: f2DividedCount += c
-    if k[1][1].word=="times" and k[1][0].templateNumber==2: f3TimesCount += c
-    if k[1][1].word=="divided" and k[1][0].templateNumber==2: f3DividedCount += c
+  for (k, c) in solutions.iteritems():
+    if k[1][1].word == "times" and k[1][0].templateNumber == 0: f1TimesCount += c
+    if k[1][1].word == "divided" and k[1][0].templateNumber == 0: f1DividedCount += c
+    if k[1][1].word == "times" and k[1][0].templateNumber == 1: f2TimesCount += c
+    if k[1][1].word == "divided" and k[1][0].templateNumber == 1: f2DividedCount += c
+    if k[1][1].word == "times" and k[1][0].templateNumber == 2: f3TimesCount += c
+    if k[1][1].word == "divided" and k[1][0].templateNumber == 2: f3DividedCount += c
 
   print f1TimesCount
   print f1DividedCount
@@ -138,7 +138,7 @@ def main():
 
   # for s in solMap.keys():
   #   print
-    
+
 
   # features = extractFeatures(sentences[0],
   # Template0(extractConcepts(sentences[0])))

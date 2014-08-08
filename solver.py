@@ -3,8 +3,26 @@ from collections import defaultdict
 import networkx as nx
 import numpy as np
 
+def validModels(world):
+    return {"validworlds":1}
+
 def featureConsistentTemplates(world):
-    return ("valid worlds", 1)
+    features = dict()
+    consistDict = dict()
+    for a,feat in world:
+        words = ','.join([f.word for f in feat])
+        temp = feat[0].templateNumber
+        if words in consistDict and consistDict[words] != temp:
+            features[words] = -1
+        else:
+            consistDict[words] = temp
+            features[words] = temp
+    out = {}
+    for key, val in features.iteritems():
+      if val >= 0:
+        out["%s,%d" %(key,val)] = 1
+    return out
+
 
 # (a,b,c) -> (a:{{b,c}}), (b:{{a,c}}), (c:{{a,b}})
 # (b,c,d) -> (b:{{c,d}}), (c:{{b,d}}), (d:{{b,c}})
@@ -30,11 +48,12 @@ def solver(sent_tuples, featureset):
             k = nx.simple_cycles(G).next()
         except StopIteration:
             for f in featureset:
-                (dict_k, dict_v) = f(combination)
-                if dict_k not in globalStats:
-                    globalStats[dict_k] = dict_v
-                else:
-                    globalStats[dict_k] += dict_v
+                feature = f(combination)
+                for k in feature:
+                    if k in globalStats:
+                        globalStats[k] += feature[k]
+                    else:
+                        globalStats[k] = feature[k]
             for c in combination:
                 stats[c] = stats[c] + 1
 
