@@ -100,18 +100,19 @@ def main():
            #     ('p', frozenset(['s', 'f']))
            #   ]
            # ]
-  solutions = solver.solver(tuples)
+  (solutions, globalStats) = solver.solver(tuples, [solver.featureConsistentTemplates])
 
-  solMap = {}
-  for s in solutions.keys():
-    varSet = set({s[0][0]}).union(s[0][1])
-    k = (varSet,s[1][0].word,s[1][1].word)
-    if not solMap.has_key(k):
-      solMap[k] = solutions[s]
-    elif solutions[s]>solMap[k]:
-      solMap[k] = solutions[s]
+  # solMap = {}
+  # for s in solutions.keys():
+  #   varSet = set({s[0][0]}).union(s[0][1])
+  #   k = (varSet,s[1][0].word,s[1][1].word)
+  #   if not solMap.has_key(k):
+  #     solMap[k] = solutions[s]
+  #   elif solutions[s]>solMap[k]:
+  #     solMap[k] = solutions[s]
   
   pprint.pprint(solutions)
+  pprint.pprint(globalStats)
 
   f1TimesCount = 0
   f1DividedCount = 0
@@ -135,8 +136,8 @@ def main():
   print f3TimesCount
   print f3DividedCount
 
-  for s in solMap.keys():
-    print 
+  # for s in solMap.keys():
+  #   print
     
 
   # features = extractFeatures(sentences[0],

@@ -3,10 +3,14 @@ from collections import defaultdict
 import networkx as nx
 import numpy as np
 
+def featureConsistentTemplates(world):
+    return ("valid worlds", 1)
+
 # (a,b,c) -> (a:{{b,c}}), (b:{{a,c}}), (c:{{a,b}})
 # (b,c,d) -> (b:{{c,d}}), (c:{{b,d}}), (d:{{b,c}})
-def solver(sent_tuples):
+def solver(sent_tuples, featureset):
     stats = {}
+    globalStats = {}
     #outs = [enum(x) for x in sent_tuples]
     count = 1
     for combination in itertools.product(*sent_tuples):
@@ -25,10 +29,16 @@ def solver(sent_tuples):
         try:
             k = nx.simple_cycles(G).next()
         except StopIteration:
+            for f in featureset:
+                (dict_k, dict_v) = f(combination)
+                if dict_k not in globalStats:
+                    globalStats[dict_k] = dict_v
+                else:
+                    globalStats[dict_k] += dict_v
             for c in combination:
                 stats[c] = stats[c] + 1
 
-    return stats
+    return (stats, globalStats)
 
 def enum(sent_tuple):
     out = []
