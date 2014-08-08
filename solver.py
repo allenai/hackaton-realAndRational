@@ -24,6 +24,24 @@ def featureConsistentTemplates(world):
     helper(features, out, 3)
     return out
 
+def featureConsistentTemplates(world):
+    features = dict()
+    consistDict = dict()
+    for a,feat in world:
+        words = ','.join([f.word for f in feat])
+        temp = feat[0].templateNumber
+        if words in consistDict and consistDict[words] != temp:
+            features[words] = -1
+        elif words not in consistDict:
+            consistDict[words] = temp
+            features[words] = temp
+    out = {}
+
+    helper(features, out, 1)
+    helper(features, out, 2)
+    helper(features, out, 3)
+    return out
+
 def helper(features, out, r):
     comb = itertools.combinations(features.keys(), r)
     for wordPairs in comb:
